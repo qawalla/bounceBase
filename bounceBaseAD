@@ -1,14 +1,4 @@
 // SPDX-License-Identifier: MIT
-
-// ________  __      __.____       _____   
-// \_____  \/  \    /  \    |     /  _  \  
-//  /  / \  \   \/\/   /    |    /  /_\  \ 
-// /   \_/.  \        /|    |___/    |    \
-// \_____\ \_/\__/\  / |_______ \____|__  /
-//        \__>     \/          \/       \/ 
-
-
-
 pragma solidity ^0.8.0;
 
 interface IQWLAToken {
@@ -45,13 +35,21 @@ contract BounceVote {
         whitelist[owner] = true;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Caller is not the owner");
+        _;
+    }
+
+    function setQWLATokenAddress(address newTokenAddress) public onlyOwner {
+        qawlaToken = IQWLAToken(newTokenAddress);
+    }
+
     modifier onlyWhitelisted() {
         require(whitelist[msg.sender], "Not whitelisted");
         _;
     }
 
-    function addToWhitelist(address user) public {
-        require(msg.sender == owner, "Only owner can add to whitelist");
+    function addToWhitelist(address user) public onlyOwner {
         whitelist[user] = true;
     }
 
